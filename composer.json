@@ -1,0 +1,24 @@
+{
+    "name": "padam87/pdf-preflight",
+    "description": "A library to preflight (validate) PDF files against various standards.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Adam Prager",
+            "email": "prager.adam87@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {"Padam87\\PdfPreflight\\": ""}
+    },
+    "require": {
+        "php": "7.*",
+        "ext-imagick": "*",
+        "smalot/pdfparser": "^0.10.0"
+    },
+    "require-dev": {
+        "symfony/var-dumper": "^3.3",
+        "symfony/stopwatch": "^3.3"
+    }
+}
