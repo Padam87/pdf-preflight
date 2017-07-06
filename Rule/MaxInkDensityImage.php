@@ -26,19 +26,14 @@ class MaxInkDensityImage implements RuleInterface
         foreach ($document->getObjectsByType('XObject', 'Image') as $k => $image) {
             $img = Utils::imageToImagick($image);
 
+            if ($img->getColorspace() != \Imagick::COLORSPACE_CMYK) {
+                $img->transformImageColorspace(\Imagick::COLORSPACE_CMYK);
+            }
+
             // $img->getImageTotalInkDensity() returns a totally wrong value, no idea what would that mean
 
             $identity = $img->identifyImage(true);
             preg_match('/Total ink density: ([0-9]*(.[0-9]*)?)%/', $identity['rawOutput'], $matches);
-
-            if (!isset($matches[1])) {
-                $errors[] = [
-                    'message' => 'Image ink density could not be determined. Not CYMK image?',
-                    'object' => $image,
-                ];
-
-                continue;
-            }
 
             $dens = $matches[1];
 
