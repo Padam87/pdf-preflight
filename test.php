@@ -4,7 +4,7 @@ namespace Padam87\PdfPreflight;
 
 include 'vendor/autoload.php';
 
-use Padam87\PdfPreflight\Standard\X1a;
+use Padam87\PdfPreflight\Standard\Printmagus;
 use Smalot\PdfParser\Object as XObject;
 use Smalot\PdfParser\Parser;
 use Symfony\Component\VarDumper\Cloner\Stub;
@@ -34,7 +34,7 @@ $parser = new Parser();
 //$document = $parser->parseFile('./test.pdf');
 $document = $parser->parseFile('./hotel.pdf');
 
-$standard = new X1a();
+$standard = new Printmagus();
 
 dump($standard->validate($document));
 
