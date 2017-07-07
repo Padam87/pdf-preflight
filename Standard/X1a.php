@@ -11,6 +11,7 @@ use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
 use Padam87\PdfPreflight\Rule\NoSeparation;
 use Padam87\PdfPreflight\Rule\OnlyEmbeddedFonts;
+use Padam87\PdfPreflight\Rule\OutputIntentPdfx;
 use Smalot\PdfParser\Document;
 
 /**
@@ -19,10 +20,10 @@ use Smalot\PdfParser\Document;
  * - [ ] PDF must be version 1.3 or earlier
  * - [x] Page must not be separated
  * - [x] OutputIntent must be present
- * - [ ] OutputIntent must contain exactly one PDF/X entry
- * - [ ] OutputConditionIdentifier required in PDF/X OutputIntent
+ * - [x] OutputIntent must contain exactly one PDF/X entry
+ * - [x] OutputConditionIdentifier required in PDF/X OutputIntent
+ * - [x] OutputIntent Info key must be present
  * - [ ] Destination profile must be embedded or Registry Name must be filled out
- * - [ ] OutputIntent Info key must be present
  * - [ ] Destination profile must be ICC output profile (type ‘prtr’)
  * - [x] Only DeviceCMYK and spot colors allowed
  * - [x] Fonts must be embedded
@@ -57,6 +58,7 @@ class X1a implements StandardInterface
         return [
             new NoSeparation(),
             new HasOutputIntent(),
+            new OutputIntentPdfx(),
             new OnlyEmbeddedFonts(),
             new NoLzwCompression(),
             new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
