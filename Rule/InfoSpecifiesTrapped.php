@@ -15,6 +15,8 @@ class InfoSpecifiesTrapped implements RuleInterface
             $errors[] = [
                 'message' => 'The info dict does not specify Trapped'
             ];
+
+            return $errors;
         }
 
         $trapped = $document->getDetails()['Trapped'];

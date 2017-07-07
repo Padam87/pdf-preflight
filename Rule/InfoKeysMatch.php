@@ -26,6 +26,8 @@ class InfoKeysMatch implements RuleInterface
                 $errors = [
                     'message' => sprintf('The key "%s" is required, but not found in the info dict.', $key)
                 ];
+
+                continue;
             }
 
             $value = $document->getDetails()[$key];
