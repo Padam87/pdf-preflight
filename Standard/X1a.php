@@ -3,6 +3,7 @@
 namespace Padam87\PdfPreflight\Standard;
 
 use Padam87\PdfPreflight\Rule\InfoKeysExist;
+use Padam87\PdfPreflight\Rule\InfoSpecifiesTrapped;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
 use Smalot\PdfParser\Document;
@@ -21,7 +22,7 @@ use Smalot\PdfParser\Document;
  * - [x] Only DeviceCMYK and spot colors allowed
  * - [ ] Fonts must be embedded
  * - [ ] LZW compression prohibited
- * - [ ] Trapped key must be True or False
+ * - [x] Trapped key must be True or False
  * - [x] GTS_PDFXVersion key must be present
  * - [ ] Invalid GTS_PDFXVersion (PDF/X-1a)
  * - [ ] Invalid GTS_PDFXConformance (PDF/X-1a)
@@ -50,6 +51,7 @@ class X1a implements StandardInterface
     {
         return [
             new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
+            new InfoSpecifiesTrapped(),
             new NoRgbImages(),
             new NoRgbText(),
         ];
