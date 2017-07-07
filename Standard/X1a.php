@@ -3,6 +3,7 @@
 namespace Padam87\PdfPreflight\Standard;
 
 use Padam87\PdfPreflight\Rule\InfoKeysExist;
+use Padam87\PdfPreflight\Rule\InfoKeysMatch;
 use Padam87\PdfPreflight\Rule\InfoSpecifiesTrapped;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
@@ -24,8 +25,8 @@ use Smalot\PdfParser\Document;
  * - [ ] LZW compression prohibited
  * - [x] Trapped key must be True or False
  * - [x] GTS_PDFXVersion key must be present
- * - [ ] Invalid GTS_PDFXVersion (PDF/X-1a)
- * - [ ] Invalid GTS_PDFXConformance (PDF/X-1a)
+ * - [x] Invalid GTS_PDFXVersion (PDF/X-1)
+ * - [x] Invalid GTS_PDFXConformance (PDF/X-1a)
  * - [x] CreationDate, CreationDate and Title required
  * - [ ] Document ID must be present in PDF trailer
  * - [ ] Either TrimBox or ArtBox must be present
@@ -51,6 +52,7 @@ class X1a implements StandardInterface
     {
         return [
             new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
+            new InfoKeysMatch(['GTS_PDFXVersion' => '/PDF\/X-1/', 'GTS_PDFXConformance' => '/PDF\/X-1a/']),
             new InfoSpecifiesTrapped(),
             new NoRgbImages(),
             new NoRgbText(),
