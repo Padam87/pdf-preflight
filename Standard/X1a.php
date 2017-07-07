@@ -5,6 +5,7 @@ namespace Padam87\PdfPreflight\Standard;
 use Padam87\PdfPreflight\Rule\InfoKeysExist;
 use Padam87\PdfPreflight\Rule\InfoKeysMatch;
 use Padam87\PdfPreflight\Rule\InfoSpecifiesTrapped;
+use Padam87\PdfPreflight\Rule\NoLzwCompression;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
 use Smalot\PdfParser\Document;
@@ -51,6 +52,7 @@ class X1a implements StandardInterface
     public function getRules(): array
     {
         return [
+            new NoLzwCompression(),
             new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
             new InfoKeysMatch(['GTS_PDFXVersion' => '/PDF\/X-1/', 'GTS_PDFXConformance' => '/PDF\/X-1a/']),
             new InfoSpecifiesTrapped(),
