@@ -2,6 +2,7 @@
 
 namespace Padam87\PdfPreflight\Standard;
 
+use Padam87\PdfPreflight\Rule\BoxesNestedProperly;
 use Padam87\PdfPreflight\Rule\DocumentIdExists;
 use Padam87\PdfPreflight\Rule\HasOutputIntent;
 use Padam87\PdfPreflight\Rule\InfoKeysExist;
@@ -37,7 +38,7 @@ use Smalot\PdfParser\Document;
  * - [x] CreationDate, CreationDate and Title required
  * - [x] Document ID must be present in PDF trailer
  * - [x] Either TrimBox or ArtBox must be present
- * - [ ] Page boxes must be nested properly
+ * - [x] Page boxes must be nested properly
  * - [ ] Transfer curves prohibited
  * - [ ] Halftone must be of Type 1 or 5
  * - [ ] Halftone Name key prohibited
@@ -68,6 +69,7 @@ class X1a implements StandardInterface
             new InfoSpecifiesTrapped(),
             new DocumentIdExists(),
             new TrimBoxOrArtBoxExists(),
+            new BoxesNestedProperly(),
             new NoRgbImages(),
             new NoRgbText(),
         ];
