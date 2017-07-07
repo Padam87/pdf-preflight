@@ -13,6 +13,7 @@ use Padam87\PdfPreflight\Rule\NoRgbText;
 use Padam87\PdfPreflight\Rule\NoSeparation;
 use Padam87\PdfPreflight\Rule\OnlyEmbeddedFonts;
 use Padam87\PdfPreflight\Rule\OutputIntentPdfx;
+use Padam87\PdfPreflight\Rule\TrimBoxOrArtBoxExists;
 use Smalot\PdfParser\Document;
 
 /**
@@ -35,7 +36,7 @@ use Smalot\PdfParser\Document;
  * - [x] Invalid GTS_PDFXConformance (PDF/X-1a)
  * - [x] CreationDate, CreationDate and Title required
  * - [x] Document ID must be present in PDF trailer
- * - [ ] Either TrimBox or ArtBox must be present
+ * - [x] Either TrimBox or ArtBox must be present
  * - [ ] Page boxes must be nested properly
  * - [ ] Transfer curves prohibited
  * - [ ] Halftone must be of Type 1 or 5
@@ -66,6 +67,7 @@ class X1a implements StandardInterface
             new InfoKeysMatch(['GTS_PDFXVersion' => '/PDF\/X-1/', 'GTS_PDFXConformance' => '/PDF\/X-1a/']),
             new InfoSpecifiesTrapped(),
             new DocumentIdExists(),
+            new TrimBoxOrArtBoxExists(),
             new NoRgbImages(),
             new NoRgbText(),
         ];
