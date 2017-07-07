@@ -23,7 +23,7 @@ use Smalot\PdfParser\Document;
  * - [ ] Destination profile must be ICC output profile (type ‘prtr’)
  * - [x] Only DeviceCMYK and spot colors allowed
  * - [ ] Fonts must be embedded
- * - [ ] LZW compression prohibited
+ * - [x] LZW compression prohibited
  * - [x] Trapped key must be True or False
  * - [x] GTS_PDFXVersion key must be present
  * - [x] Invalid GTS_PDFXVersion (PDF/X-1)
