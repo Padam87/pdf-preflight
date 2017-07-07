@@ -2,6 +2,7 @@
 
 namespace Padam87\PdfPreflight\Standard;
 
+use Padam87\PdfPreflight\Rule\DocumentIdExists;
 use Padam87\PdfPreflight\Rule\HasOutputIntent;
 use Padam87\PdfPreflight\Rule\InfoKeysExist;
 use Padam87\PdfPreflight\Rule\InfoKeysMatch;
@@ -23,8 +24,8 @@ use Smalot\PdfParser\Document;
  * - [x] OutputIntent must contain exactly one PDF/X entry
  * - [x] OutputConditionIdentifier required in PDF/X OutputIntent
  * - [x] OutputIntent Info key must be present
- * - [ ] Destination profile must be embedded or Registry Name must be filled out
- * - [ ] Destination profile must be ICC output profile (type ‘prtr’)
+ * - [x] Destination profile must be embedded or Registry Name must be filled out
+ * - [x] Destination profile must be ICC output profile (type ‘prtr’)
  * - [x] Only DeviceCMYK and spot colors allowed
  * - [x] Fonts must be embedded
  * - [x] LZW compression prohibited
@@ -33,7 +34,7 @@ use Smalot\PdfParser\Document;
  * - [x] Invalid GTS_PDFXVersion (PDF/X-1)
  * - [x] Invalid GTS_PDFXConformance (PDF/X-1a)
  * - [x] CreationDate, CreationDate and Title required
- * - [ ] Document ID must be present in PDF trailer
+ * - [x] Document ID must be present in PDF trailer
  * - [ ] Either TrimBox or ArtBox must be present
  * - [ ] Page boxes must be nested properly
  * - [ ] Transfer curves prohibited
@@ -64,6 +65,7 @@ class X1a implements StandardInterface
             new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
             new InfoKeysMatch(['GTS_PDFXVersion' => '/PDF\/X-1/', 'GTS_PDFXConformance' => '/PDF\/X-1a/']),
             new InfoSpecifiesTrapped(),
+            new DocumentIdExists(),
             new NoRgbImages(),
             new NoRgbText(),
         ];
