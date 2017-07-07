@@ -8,6 +8,7 @@ use Padam87\PdfPreflight\Rule\HasOutputIntent;
 use Padam87\PdfPreflight\Rule\InfoKeysExist;
 use Padam87\PdfPreflight\Rule\InfoKeysMatch;
 use Padam87\PdfPreflight\Rule\InfoSpecifiesTrapped;
+use Padam87\PdfPreflight\Rule\NoActions;
 use Padam87\PdfPreflight\Rule\NoLzwCompression;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
@@ -47,7 +48,7 @@ use Smalot\PdfParser\Document;
  * - [ ] Encryption prohibited
  * - [ ] Alternate image must not be default for printing
  * - [ ] Annotation and Acrobat form elements must be outside of TrimBox and BleedBox
- * - [ ] Actions and JavaScript prohibited
+ * - [x] Actions and JavaScript prohibited
  * - [ ] Operators not defined in PDF 1.3 prohibited
  * - [ ] File specifications not allowed
  * - [x] Transparency not allowed
@@ -73,6 +74,7 @@ class X1a implements StandardInterface
             new BoxesNestedProperly(),
             new NoRgbImages(),
             new NoRgbText(),
+            new NoActions(),
             new NoTransparency(),
         ];
     }
