@@ -8,6 +8,7 @@ use Padam87\PdfPreflight\Rule\InfoSpecifiesTrapped;
 use Padam87\PdfPreflight\Rule\NoLzwCompression;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
+use Padam87\PdfPreflight\Rule\NoSeparation;
 use Padam87\PdfPreflight\Rule\OnlyEmbeddedFonts;
 use Smalot\PdfParser\Document;
 
@@ -15,7 +16,7 @@ use Smalot\PdfParser\Document;
  * The PDF/X-1a standard
  *
  * - [ ] PDF must be version 1.3 or earlier
- * - [ ] Page must not be separated
+ * - [x] Page must not be separated
  * - [ ] OutputIntent must be present
  * - [ ] OutputIntent must contain exactly one PDF/X entry
  * - [ ] OutputConditionIdentifier required in PDF/X OutputIntent
@@ -53,6 +54,7 @@ class X1a implements StandardInterface
     public function getRules(): array
     {
         return [
+            new NoSeparation(),
             new OnlyEmbeddedFonts(),
             new NoLzwCompression(),
             new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
