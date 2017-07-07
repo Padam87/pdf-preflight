@@ -2,10 +2,10 @@
 
 namespace Padam87\PdfPreflight\Standard;
 
+use Padam87\PdfPreflight\Rule\InfoKeysExist;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
 use Smalot\PdfParser\Document;
-
 
 /**
  * The PDF/X-1a standard
@@ -22,10 +22,10 @@ use Smalot\PdfParser\Document;
  * - [ ] Fonts must be embedded
  * - [ ] LZW compression prohibited
  * - [ ] Trapped key must be True or False
- * - [ ] GTS_PDFXVersion key must be present
+ * - [x] GTS_PDFXVersion key must be present
  * - [ ] Invalid GTS_PDFXVersion (PDF/X-1a)
  * - [ ] Invalid GTS_PDFXConformance (PDF/X-1a)
- * - [ ] CreationDate, ModDate and Title required
+ * - [x] CreationDate, CreationDate and Title required
  * - [ ] Document ID must be present in PDF trailer
  * - [ ] Either TrimBox or ArtBox must be present
  * - [ ] Page boxes must be nested properly
@@ -49,6 +49,7 @@ class X1a implements StandardInterface
     public function getRules(): array
     {
         return [
+            new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
             new NoRgbImages(),
             new NoRgbText(),
         ];
