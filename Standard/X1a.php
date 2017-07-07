@@ -2,6 +2,7 @@
 
 namespace Padam87\PdfPreflight\Standard;
 
+use Padam87\PdfPreflight\Rule\HasOutputIntent;
 use Padam87\PdfPreflight\Rule\InfoKeysExist;
 use Padam87\PdfPreflight\Rule\InfoKeysMatch;
 use Padam87\PdfPreflight\Rule\InfoSpecifiesTrapped;
@@ -17,7 +18,7 @@ use Smalot\PdfParser\Document;
  *
  * - [ ] PDF must be version 1.3 or earlier
  * - [x] Page must not be separated
- * - [ ] OutputIntent must be present
+ * - [x] OutputIntent must be present
  * - [ ] OutputIntent must contain exactly one PDF/X entry
  * - [ ] OutputConditionIdentifier required in PDF/X OutputIntent
  * - [ ] Destination profile must be embedded or Registry Name must be filled out
@@ -55,6 +56,7 @@ class X1a implements StandardInterface
     {
         return [
             new NoSeparation(),
+            new HasOutputIntent(),
             new OnlyEmbeddedFonts(),
             new NoLzwCompression(),
             new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
