@@ -10,6 +10,7 @@ use Padam87\PdfPreflight\Rule\InfoKeysMatch;
 use Padam87\PdfPreflight\Rule\InfoSpecifiesTrapped;
 use Padam87\PdfPreflight\Rule\NoActions;
 use Padam87\PdfPreflight\Rule\NoLzwCompression;
+use Padam87\PdfPreflight\Rule\NoPostScripts;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
 use Padam87\PdfPreflight\Rule\NoSeparation;
@@ -44,7 +45,7 @@ use Smalot\PdfParser\Document;
  * - [ ] Transfer curves prohibited
  * - [ ] Halftone must be of Type 1 or 5
  * - [ ] Halftone Name key prohibited
- * - [ ] Embedded PostScript prohibited
+ * - [x] Embedded PostScript prohibited
  * - [ ] Encryption prohibited
  * - [ ] Alternate image must not be default for printing
  * - [ ] Annotation and Acrobat form elements must be outside of TrimBox and BleedBox
@@ -74,6 +75,7 @@ class X1a implements StandardInterface
             new BoxesNestedProperly(),
             new NoRgbImages(),
             new NoRgbText(),
+            new NoPostScripts(),
             new NoActions(),
             new NoTransparency(),
         ];
