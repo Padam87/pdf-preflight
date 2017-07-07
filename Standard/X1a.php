@@ -12,6 +12,7 @@ use Padam87\PdfPreflight\Rule\NoLzwCompression;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
 use Padam87\PdfPreflight\Rule\NoSeparation;
+use Padam87\PdfPreflight\Rule\NoTransparency;
 use Padam87\PdfPreflight\Rule\OnlyEmbeddedFonts;
 use Padam87\PdfPreflight\Rule\OutputIntentPdfx;
 use Padam87\PdfPreflight\Rule\TrimBoxOrArtBoxExists;
@@ -49,7 +50,7 @@ use Smalot\PdfParser\Document;
  * - [ ] Actions and JavaScript prohibited
  * - [ ] Operators not defined in PDF 1.3 prohibited
  * - [ ] File specifications not allowed
- * - [ ] Transparency not allowed
+ * - [x] Transparency not allowed
  */
 class X1a implements StandardInterface
 {
@@ -72,6 +73,7 @@ class X1a implements StandardInterface
             new BoxesNestedProperly(),
             new NoRgbImages(),
             new NoRgbText(),
+            new NoTransparency(),
         ];
     }
 
