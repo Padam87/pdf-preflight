@@ -17,6 +17,13 @@ class BoxesNestedProperly implements RuleInterface
 
         foreach ($document->getPages() as $page) {
             $details = $page->getDetails();
+
+            if (!array_key_exists('TrimBox', $details)
+                || !array_key_exists('BleedBox', $details)
+                || !array_key_exists('MediaBox', $details)) {
+                continue;
+            }
+
             $trimBox = $details['TrimBox'];
             $bleedBox = $details['BleedBox'];
             $mediaBox = $details['MediaBox'];
