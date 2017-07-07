@@ -8,6 +8,7 @@ use Padam87\PdfPreflight\Rule\InfoSpecifiesTrapped;
 use Padam87\PdfPreflight\Rule\NoLzwCompression;
 use Padam87\PdfPreflight\Rule\NoRgbImages;
 use Padam87\PdfPreflight\Rule\NoRgbText;
+use Padam87\PdfPreflight\Rule\OnlyEmbeddedFonts;
 use Smalot\PdfParser\Document;
 
 /**
@@ -22,7 +23,7 @@ use Smalot\PdfParser\Document;
  * - [ ] OutputIntent Info key must be present
  * - [ ] Destination profile must be ICC output profile (type ‘prtr’)
  * - [x] Only DeviceCMYK and spot colors allowed
- * - [ ] Fonts must be embedded
+ * - [x] Fonts must be embedded
  * - [x] LZW compression prohibited
  * - [x] Trapped key must be True or False
  * - [x] GTS_PDFXVersion key must be present
@@ -52,6 +53,7 @@ class X1a implements StandardInterface
     public function getRules(): array
     {
         return [
+            new OnlyEmbeddedFonts(),
             new NoLzwCompression(),
             new InfoKeysExist(['Title', 'CreationDate', 'CreationDate', 'GTS_PDFXVersion']),
             new InfoKeysMatch(['GTS_PDFXVersion' => '/PDF\/X-1/', 'GTS_PDFXConformance' => '/PDF\/X-1a/']),
