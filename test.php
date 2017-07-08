@@ -5,6 +5,7 @@ namespace Padam87\PdfPreflight;
 include 'vendor/autoload.php';
 
 use Padam87\PdfPreflight\Rule\InfoKeysExist;
+use Padam87\PdfPreflight\Rule\PageCount;
 use Padam87\PdfPreflight\Standard\Printmagus;
 use Smalot\PdfParser\Object as XObject;
 use Smalot\PdfParser\Parser;
@@ -37,9 +38,13 @@ $document = $parser->parseFile('./gls.pdf');
 //$document = $parser->parseFile('./js.pdf');
 
 
-$standard = new Printmagus();
+$preflight = new Preflight();
+$preflight
+    ->addStandard(new Printmagus())
+    ->addRule(new PageCount(10, 15))
+;
 
-$violations = $standard->validate($document);
+$violations = $preflight->validate($document);
 
 dump($violations);
 dump($violations->getViolationsForRule(InfoKeysExist::class));
