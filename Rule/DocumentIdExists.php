@@ -2,19 +2,17 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Header;
-use Smalot\PdfParser\XObject\Image;
 
 /**
  * Document ID must be present in PDF trailer
  */
-class DocumentIdExists implements RuleInterface
+class DocumentIdExists extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         $refl = new \ReflectionProperty(Document::class, 'trailer');
         $refl->setAccessible(true);
 
@@ -22,11 +20,7 @@ class DocumentIdExists implements RuleInterface
         $trailer = $refl->getValue($document);
 
         if (!$trailer->has('Id')) {
-            $errors[] = [
-                'message' => 'Document ID must be present in PDF trailer.'
-            ];
+            $violations->add($this->createViolation('Document ID must be present in PDF trailer.'));
         }
-
-        return $errors;
     }
 }

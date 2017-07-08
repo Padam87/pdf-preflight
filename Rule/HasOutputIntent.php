@@ -2,26 +2,22 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 
-class HasOutputIntent implements RuleInterface
+class HasOutputIntent extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        foreach ($document->getDictionary()['Catalog'] as $id)
-        {
+        foreach ($document->getDictionary()['Catalog'] as $id) {
             $meta = $document->getObjectById($id);
             $details = $meta->getDetails();
 
             if (array_key_exists('OutputIntents', $details)) {
-                return [];
+                return null;
             }
         }
 
-        return [
-            [
-                'message' => 'OutputIntent must be present',
-            ]
-        ];
+        $violations->add($this->createViolation('OutputIntent must be present'));
     }
 }

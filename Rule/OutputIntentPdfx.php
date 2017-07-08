@@ -2,6 +2,7 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Object as PdfObject;
 
@@ -19,9 +20,9 @@ use Smalot\PdfParser\Object as PdfObject;
  * (5) The ICC profile embedded as a destination profile into a PDF/X-3 OutputIntent must
  * be an output profile (type ‘prtr’).
  */
-class OutputIntentPdfx implements RuleInterface
+class OutputIntentPdfx extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
         $count = 0;
         $pdfxIntent = null;
@@ -41,39 +42,39 @@ class OutputIntentPdfx implements RuleInterface
 
         // 1
         if ($count != 1) {
-            return [
-                [
-                    'message' => sprintf(
+            $violations->add(
+                $this->createViolation(
+                    sprintf(
                         'The document must contain exactly 1 OutputIntent for PDFX, but it contains %d.',
                         $count
-                    ),
-                ],
-            ];
-        }
+                    )
+                )
+            );
 
-        $errors = [];
+            return;
+        }
 
         // 2
         if (empty($pdfxIntent['OutputConditionIdentifier'])) {
-            $errors[] = [
-                'message' => 'OutputIntent for PDFX OutputConditionIdentifier must not be empty.',
-            ];
+            $violations->add(
+                $this->createViolation('OutputIntent for PDFX OutputConditionIdentifier must not be empty.')
+            );
         }
 
         // 3
         if (!array_key_exists('Info', $pdfxIntent)) {
-            $errors[] = [
-                'message' => 'OutputIntent for PDFX must contain an Info key.',
-            ];
+            $violations->add($this->createViolation('OutputIntent for PDFX must contain an Info key.'));
         }
 
         // 4
         if ((!array_key_exists('RegistryName', $pdfxIntent) || empty($pdfxIntent['RegistryName']))
-            && !array_key_exists('DestOutputProfile', $pdfxIntent)) {
-
-            $errors[] = [
-                'message' => 'OutputIntent for PDFX must specify a RegistryName, or have a DestOutputProfile key',
-            ];
+            && !array_key_exists('DestOutputProfile', $pdfxIntent)
+        ) {
+            $violations->add(
+                $this->createViolation(
+                    'OutputIntent for PDFX must specify a RegistryName, or have a DestOutputProfile key.'
+                )
+            );
         }
 
         $profile = null;
@@ -89,11 +90,7 @@ class OutputIntentPdfx implements RuleInterface
 
         // 5
         if (substr($profile->getContent(), 12, 4) != 'prtr') { // bytes 12-15 contain the type according to the ICC spec
-            $errors[] = [
-                'message' => 'DestOutputProfile must be a valid output profile',
-            ];
+            $violations->add($this->createViolation('DestOutputProfile must be a valid output profile.'));
         }
-
-        return $errors;
     }
 }

@@ -18,6 +18,7 @@ use Padam87\PdfPreflight\Rule\NoTransparency;
 use Padam87\PdfPreflight\Rule\OnlyEmbeddedFonts;
 use Padam87\PdfPreflight\Rule\OutputIntentPdfx;
 use Padam87\PdfPreflight\Rule\TrimBoxOrArtBoxExists;
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 
 /**
@@ -81,14 +82,14 @@ class X1a implements StandardInterface
         ];
     }
 
-    public function validate(Document $document): array
+    public function validate(Document $document): Violations
     {
-        $errors = [];
+        $violations = new Violations();
 
         foreach ($this->getRules() as $rule) {
-            $errors[get_class($rule)] = $rule->validate($document);
+            $violations->merge($rule->validate($document));
         }
 
-        return $errors;
+        return $violations;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Form;
 use Smalot\PdfParser\XObject\Image;
@@ -11,12 +12,10 @@ use Smalot\PdfParser\XObject\Image;
  *
  * Untested
  */
-class NoTransparency implements RuleInterface
+class NoTransparency extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         /**
          * TODO: The specification only gives a transparency example with forms... what about images?
          *
@@ -27,14 +26,9 @@ class NoTransparency implements RuleInterface
                 $group = $form->getHeader()->get('Group');
 
                 if (array_key_exists('S', $group) && $group['S'] === 'Transparency') {
-                    $errors[] = [
-                        'message' => 'Transparent Form detected.',
-                        'object' => $form,
-                    ];
+                    $violations->add($this->createViolation('Transparent Form detected.', $form));
                 }
             }
         }
-
-        return $errors;
     }
 }

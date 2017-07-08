@@ -2,25 +2,19 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
-class NoRgbImages implements RuleInterface
+class NoRgbImages extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         /** @var Image $image */
         foreach ($document->getObjectsByType('XObject', 'Image') as $image) {
             if ($image->get('ColorSpace') == 'DeviceRGB') {
-                $errors[] = [
-                    'message' => 'RGB image detected',
-                    'object' => $image,
-                ];
+                $violations->add($this->createViolation('RGB image detected.', $image));
             }
         }
-
-        return $errors;
     }
 }

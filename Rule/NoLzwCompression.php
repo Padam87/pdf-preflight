@@ -2,26 +2,22 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
 /**
  * Untested, as I have no pdf that uses LZW.
  */
-class NoLzwCompression implements RuleInterface
+class NoLzwCompression extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         foreach ($document->getPages() as $page) {
             $filter = $page->getDetails()['Contents']['Filter'];
 
             if ($this->isLzw($filter)) {
-                $errors[] = [
-                    'message' => 'LZW compression used in page.',
-                    'object' => $page,
-                ];
+                $violations->add($this->createViolation('LZW compression used in page.', $page));
             }
         }
 
@@ -30,14 +26,9 @@ class NoLzwCompression implements RuleInterface
             $filter = $image->getDetails()['Filter'];
 
             if ($this->isLzw($filter)) {
-                $errors[] = [
-                    'message' => 'LZW compression used in image.',
-                    'object' => $image,
-                ];
+                $violations->add($this->createViolation('LZW compression used in image.', $image));
             }
         }
-
-        return $errors;
     }
 
     private function isLzw($filter)

@@ -2,24 +2,18 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
-class NoSeparation implements RuleInterface
+class NoSeparation extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         foreach ($document->getPages() as $page) {
             if (array_key_exists('SeparationInfo', $page->getDetails())) {
-                $errors[] = [
-                    'message' => 'Separated page found.',
-                    'object' => $page,
-                ];
+                $violations->add($this->createViolation('Separated page found.', $page));
             }
         }
-
-        return $errors;
     }
 }

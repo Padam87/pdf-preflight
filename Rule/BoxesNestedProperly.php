@@ -2,6 +2,7 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 
 /**
@@ -9,18 +10,17 @@ use Smalot\PdfParser\Document;
  * nested properly. The TrimBox must extend neither beyond the BleedBox nor the
  * MediaBox, and the BleedBox must not extend beyond the MediaBox.
  */
-class BoxesNestedProperly implements RuleInterface
+class BoxesNestedProperly extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         foreach ($document->getPages() as $page) {
             $details = $page->getDetails();
 
             if (!array_key_exists('TrimBox', $details)
                 || !array_key_exists('BleedBox', $details)
-                || !array_key_exists('MediaBox', $details)) {
+                || !array_key_exists('MediaBox', $details)
+            ) {
                 continue;
             }
 
@@ -29,36 +29,21 @@ class BoxesNestedProperly implements RuleInterface
             $mediaBox = $details['MediaBox'];
 
             if (!$this->boxContainsBox($mediaBox, $trimBox)) {
-                $errors[] = [
-                    'message' => 'The TrimBox must not extend beyond the MediaBox',
-                    'object' => $page,
-                ];
+                $violations->add($this->createViolation('The TrimBox must not extend beyond the MediaBox', $page));
             }
 
             if (!$this->boxContainsBox($bleedBox, $trimBox)) {
-                $errors[] = [
-                    'message' => 'The TrimBox must not extend beyond the BleedBox',
-                    'object' => $page,
-                ];
+                $violations->add($this->createViolation('The TrimBox must not extend beyond the BleedBox', $page));
             }
 
             if (!$this->boxContainsBox($mediaBox, $bleedBox)) {
-                $errors[] = [
-                    'message' => 'The BleedBox must not extend beyond the MediaBox',
-                    'object' => $page,
-                ];
+                $violations->add($this->createViolation('The BleedBox must not extend beyond the MediaBox', $page));
             }
         }
-
-        return $errors;
     }
 
     private function boxContainsBox($outer, $inner)
     {
-        return $outer[0] <= $inner[0]
-            && $outer[1] <= $inner[1]
-            && $outer[2] >= $inner[2]
-            && $outer[3] >= $inner[3]
-        ;
+        return $outer[0] <= $inner[0] && $outer[1] <= $inner[1] && $outer[2] >= $inner[2] && $outer[3] >= $inner[3];
     }
 }

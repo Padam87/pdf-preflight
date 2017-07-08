@@ -3,10 +3,11 @@
 namespace Padam87\PdfPreflight\Rule;
 
 use Padam87\PdfPreflight\Utils;
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
-class MaxInkDensityImage implements RuleInterface
+class MaxInkDensityImage extends AbstractRule
 {
     /**
      * @var int
@@ -18,10 +19,8 @@ class MaxInkDensityImage implements RuleInterface
         $this->limit = $limit;
     }
 
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         /** @var Image $image */
         foreach ($document->getObjectsByType('XObject', 'Image') as $k => $image) {
             $img = Utils::imageToImagick($image);
@@ -38,14 +37,10 @@ class MaxInkDensityImage implements RuleInterface
             $dens = $matches[1];
 
             if ($dens > $this->limit) {
-                $errors[] = [
-                    'message' => 'Max ink density limit exceeded.',
-                    'object' => $image,
-                    'density' => $dens,
-                ];
+                $violations->add(
+                    $this->createViolation('Max ink density limit exceeded.', $image, null, ['density' => $dens])
+                );
             }
         }
-
-        return $errors;
     }
 }

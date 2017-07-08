@@ -2,6 +2,7 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Header;
 use Smalot\PdfParser\XObject\Image;
@@ -11,23 +12,16 @@ use Smalot\PdfParser\XObject\Image;
  * While both TrimBox or ArtBox may be used, the PDF/X-3 standard recommends to
  * prefer the TrimBox.
  */
-class TrimBoxOrArtBoxExists implements RuleInterface
+class TrimBoxOrArtBoxExists extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         foreach ($document->getPages() as $page) {
             $details = $page->getDetails();
 
             if (!array_key_exists('TrimBox', $details) && !array_key_exists('ArtBox', $details)) {
-                $errors[] = [
-                    'message' => 'A page without a TrimBox or an ArtBox found.',
-                    'object' => $page,
-                ];
+                $violations->add($this->createViolation('A page without a TrimBox or an ArtBox found.', $page));
             }
         }
-
-        return $errors;
     }
 }

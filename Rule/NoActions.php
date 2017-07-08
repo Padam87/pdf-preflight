@@ -2,10 +2,11 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Object as PdfObject;
 
-class NoActions implements RuleInterface
+class NoActions extends AbstractRule
 {
     CONST ACTIONS = [
         'GoTo',
@@ -28,21 +29,15 @@ class NoActions implements RuleInterface
         'GoTo3DView',
     ];
 
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         /** @var PdfObject $object */
         foreach ($document->getObjects() as $k => $object) {
-            if ($object->getHeader()->has('S')
-                && in_array($object->getHeader()->get('S'), self::ACTIONS)) {
-                $errors[] = [
-                    'message' => sprintf('%s action found', $object->getHeader()->get('S')),
-                    'object' => $object,
-                ];
+            if ($object->getHeader()->has('S') && in_array($object->getHeader()->get('S'), self::ACTIONS)) {
+                $violations->add(
+                    $this->createViolation(sprintf('%s action found', $object->getHeader()->get('S')), $object)
+                );
             }
         }
-
-        return $errors;
     }
 }

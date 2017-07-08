@@ -2,10 +2,11 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
-class InfoKeysMatch implements RuleInterface
+class InfoKeysMatch extends AbstractRule
 {
     /**
      * @var array
@@ -17,15 +18,13 @@ class InfoKeysMatch implements RuleInterface
         $this->expressions = $expressions;
     }
 
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         foreach ($this->expressions as $key => $expression) {
             if (!array_key_exists($key, $document->getDetails())) {
-                $errors = [
-                    'message' => sprintf('The key "%s" is required, but not found in the info dict.', $key)
-                ];
+                $violations->add(
+                    $this->createViolation(sprintf('The key "%s" is required, but not found in the info dict.', $key))
+                );
 
                 continue;
             }
@@ -33,17 +32,17 @@ class InfoKeysMatch implements RuleInterface
             $value = $document->getDetails()[$key];
 
             if (false == preg_match($expression, $value)) {
-                $errors = [
-                    'message' => sprintf(
-                        'The key "%s" must match the expression "%s", contains "%s"',
-                        $key,
-                        $expression,
-                        $value
-                    ),
-                ];
+                $violations->add(
+                    $this->createViolation(
+                        sprintf(
+                            'The key "%s" must match the expression "%s", contains "%s"',
+                            $key,
+                            $expression,
+                            $value
+                        )
+                    )
+                );
             }
         }
-
-        return $errors;
     }
 }

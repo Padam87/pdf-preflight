@@ -2,34 +2,31 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
-class InfoSpecifiesTrapped implements RuleInterface
+class InfoSpecifiesTrapped extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         if (!array_key_exists('Trapped', $document->getDetails())) {
-            $errors[] = [
-                'message' => 'The info dict does not specify Trapped'
-            ];
+            $violations->add($this->createViolation('The info dict does not specify Trapped'));
 
-            return $errors;
+            return;
         }
 
         $trapped = $document->getDetails()['Trapped'];
 
         if (!in_array($trapped, ['True', 'False'])) {
-            $errors[] = [
-                'message' => sprintf(
-                    'The info dict specifies Trapped, but its value is invalid. Must be True or False, %s given',
-                    $trapped
+            $violations->add(
+                $this->createViolation(
+                    sprintf(
+                        'The info dict specifies Trapped, but its value is invalid. Must be True or False, %s given',
+                        $trapped
+                    )
                 )
-            ];
+            );
         }
-
-        return $errors;
     }
 }

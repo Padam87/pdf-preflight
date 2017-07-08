@@ -2,23 +2,17 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Object as PdfObject;
 
-class NoPostScripts implements RuleInterface
+class NoPostScripts extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         /** @var PdfObject $object */
         foreach ($document->getObjectsByType('XObject', 'PS') as $k => $object) {
-            $errors[] = [
-                'message' => 'Embedded PostScript found',
-                'object' => $object,
-            ];
+            $violations->add($this->createViolation('Embedded PostScript found.', $object));
         }
-
-        return $errors;
     }
 }

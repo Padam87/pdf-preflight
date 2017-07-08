@@ -4,6 +4,7 @@ namespace Padam87\PdfPreflight;
 
 include 'vendor/autoload.php';
 
+use Padam87\PdfPreflight\Rule\InfoKeysExist;
 use Padam87\PdfPreflight\Standard\Printmagus;
 use Smalot\PdfParser\Object as XObject;
 use Smalot\PdfParser\Parser;
@@ -30,11 +31,23 @@ VarDumper::setHandler(function ($var) {
 });
 
 $parser = new Parser();
-//$document = $parser->parseFile('./gls.pdf');
+$document = $parser->parseFile('./gls.pdf');
 //$document = $parser->parseFile('./test.pdf');
-$document = $parser->parseFile('./hotel.pdf');
+//$document = $parser->parseFile('./hotel.pdf');
+//$document = $parser->parseFile('./js.pdf');
+
 
 $standard = new Printmagus();
 
-dump($standard->validate($document));
+$violations = $standard->validate($document);
+
+dump($violations);
+dump($violations->getViolationsForRule(InfoKeysExist::class));
+
+$pageViolations = [];
+foreach ($document->getPages() as $k => $page) {
+    $pageViolations[$k] = $violations->getViolationsForPage($page)->count();
+}
+dump($pageViolations, array_sum($pageViolations));
+dump($violations->getViolationsForDocument());
 

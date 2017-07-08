@@ -2,10 +2,10 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
-use Smalot\PdfParser\XObject\Image;
 
-class InfoKeysExist implements RuleInterface
+class InfoKeysExist extends AbstractRule
 {
     /**
      * @var array
@@ -17,18 +17,14 @@ class InfoKeysExist implements RuleInterface
         $this->keys = $keys;
     }
 
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         foreach ($this->keys as $key) {
             if (!array_key_exists($key, $document->getDetails())) {
-                $errors = [
-                    'message' => sprintf('The key "%s" is required, but not found in the info dict.', $key)
-                ];
+                $violations->add(
+                    $this->createViolation(sprintf('The key "%s" is required, but not found in the info dict.', $key))
+                );
             }
         }
-
-        return $errors;
     }
 }

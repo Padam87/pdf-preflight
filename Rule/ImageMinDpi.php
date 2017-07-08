@@ -2,10 +2,11 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
-class ImageMinDpi implements RuleInterface
+class ImageMinDpi extends AbstractRule
 {
     /**
      * @var int
@@ -17,10 +18,8 @@ class ImageMinDpi implements RuleInterface
         $this->minDpi = $minDpi;
     }
 
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         foreach ($document->getPages() as $page) {
             $mediaBox = $page->get('MediaBox')->getDetails();
 
@@ -44,15 +43,9 @@ class ImageMinDpi implements RuleInterface
                 ];
 
                 if ($dpi['horizontal'] < $this->minDpi || $dpi['vertical'] < $this->minDpi) {
-                    $errors[] = [
-                        'message' => 'Image with too low DPI',
-                        'object' => $object,
-                        'dpi' => $dpi,
-                    ];
+                    $violations->add($this->createViolation('Image with too low DPI', $object, $page, ['dpi' => $dpi]));
                 }
             }
         }
-
-        return $errors;
     }
 }

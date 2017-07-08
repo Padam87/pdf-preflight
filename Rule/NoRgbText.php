@@ -2,15 +2,15 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Object as XObject;
 use Smalot\PdfParser\Page;
 
-class NoRgbText implements RuleInterface
+class NoRgbText extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
         $page = null;
 
         /** @var XObject $object */
@@ -50,16 +50,17 @@ class NoRgbText implements RuleInterface
                 }
 
                 if (!$valid) {
-                    $errors[] = [
-                        'message' => 'Text with RGB colors',
-                        'object' => $object,
-                        'page' => $page,
-                    ];
+                    $violations->add(
+                        $this->createViolation(
+                            'Text with RGB colors.',
+                            $object,
+                            $page,
+                            ['rgb' => $norm['RG'] ?? $norm['rg']]
+                        )
+                    );
                 }
             }
         }
-
-        return $errors;
     }
 
     private function validateColorSpace($colorSpace, Page $page)

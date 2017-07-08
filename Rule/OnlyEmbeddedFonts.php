@@ -2,16 +2,15 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
+use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Font;
 use Smalot\PdfParser\XObject\Image;
 
-class OnlyEmbeddedFonts implements RuleInterface
+class OnlyEmbeddedFonts extends AbstractRule
 {
-    public function validate(Document $document) : array
+    public function doValidate(Document $document, Violations $violations)
     {
-        $errors = [];
-
         $fonts = $document->getDictionary()['Font'];
 
         foreach ($fonts as $id) {
@@ -21,14 +20,9 @@ class OnlyEmbeddedFonts implements RuleInterface
             $embedded = $this->validateFont($font, $document);
 
             if (!$embedded) {
-                $errors[] = [
-                    'message' => 'Font not embedded.',
-                    'object' => $font
-                ];
+                $violations->add($this->createViolation('Font not embedded.', $font));
             }
         }
-
-        return $errors;
     }
 
     private function validateFont(Font $font, Document $document)
@@ -42,7 +36,7 @@ class OnlyEmbeddedFonts implements RuleInterface
 
         // A composite font—a font composed of glyphs from a descendant CIDFont
         if ($details['Subtype'] === 'Type0') {
-            foreach($details['DescendantFonts'] as $subId) {
+            foreach ($details['DescendantFonts'] as $subId) {
                 /** @var Font $font */
                 $font = $document->getObjectById(str_replace('#Obj#', '', $subId));
 
