@@ -35,7 +35,7 @@ abstract class AbstractRule implements RuleInterface
         array $extra = []
     ): Violation
     {
-        if ($object instanceof Page) {
+        if (get_class($object) == Page::class) {
             $page = $object;
         }
 
