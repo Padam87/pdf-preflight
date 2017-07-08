@@ -42,7 +42,7 @@ class Violations extends ArrayCollection
     public function getViolationsForDocument()
     {
         $criteria = Criteria::create()
-            ->where(Criteria::expr()->eq("object", null))
+            ->where(Criteria::expr()->eq("page", null))
         ;
 
         return $this->matching($criteria);
