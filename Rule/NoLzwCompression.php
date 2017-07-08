@@ -14,7 +14,8 @@ class NoLzwCompression extends AbstractRule
     public function doValidate(Document $document, Violations $violations)
     {
         foreach ($document->getPages() as $page) {
-            $filter = $page->getDetails()['Contents']['Filter'];
+            $contents = $page->getDetails()['Contents'];
+            $filter = isset($contents['Filter']) ? $contents['Filter'] : null;
 
             if ($this->isLzw($filter)) {
                 $violations->add($this->createViolation('LZW compression used in page.', $page));
