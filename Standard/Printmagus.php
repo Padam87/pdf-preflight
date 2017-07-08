@@ -22,7 +22,7 @@ class Printmagus extends X1a
             $rules,
             [
                 new ImageMinDpi(300),
-                new MaxInkDensityImage(320),
+                //new MaxInkDensityImage(320),
                 new MaxInkDensityText(320),
             ]
         );

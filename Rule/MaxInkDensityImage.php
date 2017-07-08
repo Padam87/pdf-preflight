@@ -7,6 +7,9 @@ use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
+/**
+ * This can be extremely slow when a PDF contains a lot of large images
+ */
 class MaxInkDensityImage extends AbstractRule
 {
     /**
@@ -29,12 +32,7 @@ class MaxInkDensityImage extends AbstractRule
                 $img->transformImageColorspace(\Imagick::COLORSPACE_CMYK);
             }
 
-            // $img->getImageTotalInkDensity() returns a totally wrong value, no idea what would that mean
-
-            $identity = $img->identifyImage(true);
-            preg_match('/Total ink density: ([0-9]*(.[0-9]*)?)%/', $identity['rawOutput'], $matches);
-
-            $dens = $matches[1];
+            $dens = $this->getInkDensity($img);
 
             if ($dens > $this->limit) {
                 $violations->add(
@@ -42,5 +40,14 @@ class MaxInkDensityImage extends AbstractRule
                 );
             }
         }
+    }
+
+    private function getInkDensity(\Imagick $img)
+    {
+        $identity = $img->identifyImage(true);
+
+        preg_match('/Total ink density: ([0-9]*(.[0-9]*)?)%/', $identity['rawOutput'], $matches);
+
+        return $matches[1];
     }
 }
