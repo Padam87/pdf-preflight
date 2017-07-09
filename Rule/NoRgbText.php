@@ -7,6 +7,9 @@ use Smalot\PdfParser\Document;
 use Smalot\PdfParser\Object as XObject;
 use Smalot\PdfParser\Page;
 
+/**
+ * Requires decoded streams
+ */
 class NoRgbText extends AbstractRule
 {
     public function doValidate(Document $document, Violations $violations)

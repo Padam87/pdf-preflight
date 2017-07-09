@@ -8,7 +8,12 @@ use Smalot\PdfParser\Document;
 use Smalot\PdfParser\XObject\Image;
 
 /**
- * This can be extremely slow when a PDF contains a lot of large images
+ * This can be extremely slow when a PDF contains a lot of large images.
+ * (Imagick identifyImage method is very slow.)
+ *
+ * This rule also requires decoded streams, further slowing down the process.
+ *
+ * Avoid unless absolutely necessary.
  */
 class MaxInkDensityImage extends AbstractRule
 {

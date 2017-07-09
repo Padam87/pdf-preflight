@@ -4,11 +4,11 @@ namespace Padam87\PdfPreflight;
 
 include 'vendor/autoload.php';
 
-use Padam87\PdfPreflight\Rule\InfoKeysExist;
+use Padam87\PdfPreflight\Parser\Smalot\Parser;
+use Padam87\PdfPreflight\Rule\NoRgbText;
 use Padam87\PdfPreflight\Rule\PageCount;
 use Padam87\PdfPreflight\Standard\Printmagus;
 use Smalot\PdfParser\Object as XObject;
-use Smalot\PdfParser\Parser;
 use Symfony\Component\VarDumper\Cloner\Stub;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
 use Symfony\Component\VarDumper\Dumper\CliDumper;
@@ -33,10 +33,6 @@ VarDumper::setHandler(function ($var) {
 
 $parser = new Parser();
 $document = $parser->parseFile('./gls.pdf');
-//$document = $parser->parseFile('./test.pdf');
-//$document = $parser->parseFile('./hotel.pdf');
-//$document = $parser->parseFile('./js.pdf');
-
 
 $preflight = new Preflight();
 $preflight
@@ -47,7 +43,7 @@ $preflight
 $violations = $preflight->validate($document);
 
 dump($violations);
-dump($violations->getViolationsForRule(InfoKeysExist::class));
+dump($violations->getViolationsForRule(NoRgbText::class));
 
 $pageViolations = [];
 foreach ($document->getPages() as $k => $page) {
@@ -55,4 +51,3 @@ foreach ($document->getPages() as $k => $page) {
 }
 dump($pageViolations, array_sum($pageViolations));
 dump($violations->getViolationsForDocument());
-
