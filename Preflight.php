@@ -7,7 +7,7 @@ use Padam87\PdfPreflight\Standard\StandardInterface;
 use Padam87\PdfPreflight\Violation\Violations;
 use Smalot\PdfParser\Document;
 
-class Preflight
+class Preflight implements PreflightInterface
 {
     /**
      * @var StandardInterface[]
@@ -62,5 +62,25 @@ class Preflight
         $this->rules[] = $rule;
 
         return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isDependentOnStreams() : bool
+    {
+        foreach ($this->getStandards() as $standard) {
+            if ($standard->isDependentOnStreams()) {
+                return true;
+            }
+        }
+
+        foreach ($this->getRules() as $rule) {
+            if ($rule->isDependentOnStreams()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

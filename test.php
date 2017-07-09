@@ -8,6 +8,7 @@ use Padam87\PdfPreflight\Parser\Smalot\Parser;
 use Padam87\PdfPreflight\Rule\NoRgbText;
 use Padam87\PdfPreflight\Rule\PageCount;
 use Padam87\PdfPreflight\Standard\Printmagus;
+use Padam87\PdfPreflight\Standard\X1a;
 use Smalot\PdfParser\Object as XObject;
 use Symfony\Component\VarDumper\Cloner\Stub;
 use Symfony\Component\VarDumper\Cloner\VarCloner;
@@ -31,14 +32,14 @@ VarDumper::setHandler(function ($var) {
     $dumper->dump($cloner->cloneVar($var));
 });
 
-$parser = new Parser();
-$document = $parser->parseFile('./gls.pdf');
-
 $preflight = new Preflight();
 $preflight
-    ->addStandard(new Printmagus())
+    ->addStandard(new X1a())
     ->addRule(new PageCount(10, 15))
 ;
+
+$parser = new Parser();
+$document = $parser->parseFile('./test2.pdf', $preflight->isDependentOnStreams());
 
 $violations = $preflight->validate($document);
 

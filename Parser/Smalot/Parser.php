@@ -9,13 +9,21 @@ class Parser extends \Smalot\PdfParser\Parser
     /**
      * {@inheritdoc}
      */
-    public function parseContent($content)
+    public function parseFile($filename, $decode = true)
+    {
+        return @$this->parseContent(file_get_contents($filename), $decode);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function parseContent($content, $decode = true)
     {
         // Create structure using TCPDF Parser.
         ob_start();
 
         @$parser = new \Padam87\PdfPreflight\Parser\Parser();
-        list($xref, $data) = $parser->parse($content);
+        list($xref, $data) = $parser->parse($content, $decode);
         unset($parser);
 
         ob_end_clean();

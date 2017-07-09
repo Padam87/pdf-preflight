@@ -19,6 +19,14 @@ class MaxInkDensityText extends AbstractRule
         $this->limit = $limit;
     }
 
+    /**
+     * {@inheritdoc}
+     */
+    public function isDependentOnStreams() : bool
+    {
+        return true;
+    }
+
     public function doValidate(Document $document, Violations $violations)
     {
         /** @var XObject $object */

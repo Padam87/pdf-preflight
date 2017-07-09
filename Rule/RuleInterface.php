@@ -2,10 +2,8 @@
 
 namespace Padam87\PdfPreflight\Rule;
 
-use Padam87\PdfPreflight\Violation\Violations;
-use Smalot\PdfParser\Document;
+use Padam87\PdfPreflight\PreflightInterface;
 
-interface RuleInterface
+interface RuleInterface extends PreflightInterface
 {
-    public function validate(Document $document) : Violations;
 }

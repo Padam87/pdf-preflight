@@ -63,4 +63,12 @@ abstract class AbstractRule implements RuleInterface
 
         return null;
     }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isDependentOnStreams() : bool
+    {
+        return false;
+    }
 }

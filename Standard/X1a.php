@@ -55,7 +55,7 @@ use Smalot\PdfParser\Document;
  * - [ ] File specifications not allowed
  * - [x] Transparency not allowed
  */
-class X1a implements StandardInterface
+class X1a extends AbstractStandard
 {
     /**
      * {@inheritdoc}
